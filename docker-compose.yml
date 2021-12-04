@@ -1,0 +1,47 @@
+version: '3.1'
+
+services:
+
+  web:
+    build: ./
+    volumes:
+      - ./public_html:/var/www/html
+    container_name: $(PROJECT_NAME)_web
+    links:
+      - db
+    ports:
+      - '127.0.0.1:8000:80'
+      - '127.0.0.1:443:8443'
+    depends_on:
+      - db
+    working_dir: /var/www/html
+    restart: 'no'
+
+  db:
+    image: mariadb
+    container_name: $(PROJECT_NAME)_db
+    volumes:
+      - ./db-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: $(MYSQL_DATABASE)
+      MYSQL_USER: $(MYSQL_USER)
+      MYSQL_PASSWORD: $(MYSQL_PASSWORD)
+      MYSQL_ROOT_PASSWORD: $(MYSQL_ROOT_PASSWORD)
+    command:
+      [
+        '--default_authentication_plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+      ]
+    restart: 'no'
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: $(PROJECT_NAME)_phpmyadmin
+    links:
+      - db:db
+    ports:
+      - '127.0.0.1:8080:80'
+    environment:
+      UPLOAD_LIMIT: 1024M
+    restart: 'no'
