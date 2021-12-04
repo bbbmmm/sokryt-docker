@@ -6,7 +6,7 @@ services:
     build: ./
     volumes:
       - ./public_html:/var/www/html
-    container_name: $(PROJECT_NAME)_web
+    container_name: ${PROJECT_NAME}_web
     links:
       - db
     ports:
@@ -19,14 +19,14 @@ services:
 
   db:
     image: mariadb
-    container_name: $(PROJECT_NAME)_db
+    container_name: ${PROJECT_NAME}_db
     volumes:
       - ./db-data:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: $(MYSQL_DATABASE)
-      MYSQL_USER: $(MYSQL_USER)
-      MYSQL_PASSWORD: $(MYSQL_PASSWORD)
-      MYSQL_ROOT_PASSWORD: $(MYSQL_ROOT_PASSWORD)
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     command:
       [
         '--default_authentication_plugin=mysql_native_password',
@@ -37,7 +37,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: $(PROJECT_NAME)_phpmyadmin
+    container_name: ${PROJECT_NAME}_phpmyadmin
     links:
       - db:db
     ports:
