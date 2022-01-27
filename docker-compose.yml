@@ -37,11 +37,13 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: ${PROJECT_NAME}_phpmyadmin
+    container_name: ${PROJECT_NAME}_pma
     links:
       - db:db
     ports:
       - '127.0.0.1:8080:80'
     environment:
-      UPLOAD_LIMIT: 1024M
+      - UPLOAD_LIMIT=1024M
+      - PMA_USER=${MYSQL_USER}
+      - PMA_PASSWORD=${MYSQL_PASSWORD}
     restart: 'no'
