@@ -3,15 +3,15 @@ version: '3.1'
 services:
 
   web:
-    build: ./
+    build: ./php7
     volumes:
       - ./public_html:/var/www/html
     container_name: ${PROJECT_NAME}_web
     links:
       - db
     ports:
-      - '127.0.0.1:8000:80'
-      - '127.0.0.1:443:8443'
+      - '0.0.0.0:80:80'
+      - '0.0.0.0:443:8443'
     depends_on:
       - db
     working_dir: /var/www/html
@@ -41,7 +41,7 @@ services:
     links:
       - db:db
     ports:
-      - '127.0.0.1:8080:80'
+      - '0.0.0.0:8080:80'
     environment:
       - UPLOAD_LIMIT=1024M
       - PMA_USER=${MYSQL_USER}
