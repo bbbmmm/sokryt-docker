@@ -3,22 +3,28 @@ version: '3.1'
 services:
 
   web:
-    build: ./php7
+    build:
+      context: ./
+      dockerfile: Dockerfile-php7
     volumes:
       - ./public_html:/var/www/html
+      - ./ssl-certs:/etc/letsencrypt
+      - ./php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
     container_name: ${PROJECT_NAME}_web
     links:
       - db
     ports:
       - '0.0.0.0:80:80'
-      - '0.0.0.0:443:8443'
+      - '0.0.0.0:443:443'
     depends_on:
       - db
     working_dir: /var/www/html
-    restart: 'no'
+    restart: 'always'
 
   db:
-    image: mariadb
+    build:
+      context: ./
+      dockerfile: Dockerfile-mariadb
     container_name: ${PROJECT_NAME}_db
     volumes:
       - ./db-data:/var/lib/mysql
@@ -33,10 +39,12 @@ services:
         '--character-set-server=utf8mb4',
         '--collation-server=utf8mb4_unicode_ci'
       ]
-    restart: 'no'
+    restart: 'always'
 
   phpmyadmin:
-    image: phpmyadmin
+    build:
+      context: ./
+      dockerfile: Dockerfile-phpmyadmin
     container_name: ${PROJECT_NAME}_pma
     links:
       - db:db
@@ -46,4 +54,4 @@ services:
       - UPLOAD_LIMIT=1024M
       - PMA_USER=${MYSQL_USER}
       - PMA_PASSWORD=${MYSQL_PASSWORD}
-    restart: 'no'
+    restart: 'always'

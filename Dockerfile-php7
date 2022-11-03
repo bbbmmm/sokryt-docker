@@ -49,7 +49,7 @@ RUN set -eux; \
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
-    echo 'opcache.memory_consumption=128'; \
+    echo 'opcache.memory_consumption=1024'; \
     echo 'opcache.interned_strings_buffer=8'; \
     echo 'opcache.max_accelerated_files=4000'; \
     echo 'opcache.revalidate_freq=60'; \
@@ -61,10 +61,20 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 # https://www.drupal.org/node/3060/release
 # ENV DRUPAL_VERSION 9.2.10
 
-COPY apache-drupal.conf /etc/apache2/sites-enabled/000-default.conf
+RUN apt-get update; \
+    apt install -y \
+    certbot \
+    python3-certbot-apache \
+    --no-install-recommends; \
+    apt-get upgrade -y;
+
+# RUN certbot --apache -d sokryt.ru -d www.sokryt.ru --reinstall --post-hook "/usr/sbin/service apache2 restart";
+
+COPY apache-drupal.conf /etc/apache2/sites-enabled/000-sokryt.conf
+
 WORKDIR /var/www/html
 
 RUN set -eux; \
-    export COMPOSER_HOME="$(mktemp -d)"
+     export COMPOSER_HOME="$(mktemp -d)"
 
 ENV PATH=${PATH}:/var/www/html/vendor/bin

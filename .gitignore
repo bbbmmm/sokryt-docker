@@ -2,3 +2,4 @@
 .env
 db-data/*
 public_html/*
+ssl-certs/*
