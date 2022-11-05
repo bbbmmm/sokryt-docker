@@ -68,7 +68,7 @@ RUN apt-get update; \
     --no-install-recommends; \
     apt-get upgrade -y;
 
-# RUN certbot --apache -d sokryt.ru -d www.sokryt.ru --reinstall --post-hook "/usr/sbin/service apache2 restart";
+RUN certbot --apache -d sokryt.ru -d www.sokryt.ru --reinstall --post-hook "/usr/sbin/service apache2 restart";
 
 COPY apache-drupal.conf /etc/apache2/sites-enabled/000-sokryt.conf
 

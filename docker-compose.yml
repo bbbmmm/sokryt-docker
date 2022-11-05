@@ -19,7 +19,7 @@ services:
     depends_on:
       - db
     working_dir: /var/www/html
-    restart: 'always'
+    restart: 'no'
 
   db:
     build:
@@ -39,7 +39,7 @@ services:
         '--character-set-server=utf8mb4',
         '--collation-server=utf8mb4_unicode_ci'
       ]
-    restart: 'always'
+    restart: 'no'
 
   phpmyadmin:
     build:
@@ -54,4 +54,4 @@ services:
       - UPLOAD_LIMIT=1024M
       - PMA_USER=${MYSQL_USER}
       - PMA_PASSWORD=${MYSQL_PASSWORD}
-    restart: 'always'
+    restart: 'no'
